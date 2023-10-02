@@ -1,6 +1,7 @@
 'use client'
 import { useContext, useEffect, useState } from 'react';
-import lottie from 'lottie-web';
+// import lottie from 'lottie-web';
+import Lottie from "lottie-react";
 import animationData from "../utils/asset/chat.json"
 import ModalCom from './modal';
 import { useRouter } from "next/navigation"
@@ -24,12 +25,12 @@ export default function Login() {
     const [loading, setLoading] = useState(false);
     const [mode, setMode] = useState(false)
     useEffect(() => {
-        lottie.loadAnimation({
-            container: document.getElementById("your-animation-container"),// Replace with your container ID
-            animationData: animationData, // Path to your Lottie JSON fileentById('your-animation-container'),
-            renderer: 'svg', // or 'canvas' or 'html'
-            autoplay: true,
-        });
+        // lottie.loadAnimation({
+        //     container: document.getElementById("your-animation-container"),// Replace with your container ID
+        //     animationData: animationData, // Path to your Lottie JSON fileentById('your-animation-container'),
+        //     renderer: 'svg', // or 'canvas' or 'html'
+        //     autoplay: true,
+        // });
     }, []);
     const closeModal = () => {
         setMode(false)
@@ -132,6 +133,8 @@ export default function Login() {
         <div className='Container-fluid'>
             <div className="main">
                 <div className="content-box" id='your-animation-container'>
+
+                    <Lottie className='animationLoti' animationData={animationData} loop={true} />
                 </div>
                 <div className="login-box">
                     <div className="login-container">
