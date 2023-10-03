@@ -9,15 +9,20 @@ import Loader from '@/components/loader'
 import { userContext } from '@/components/wrapper'
 import { BASE_URL } from '@/services/endPoint'
 function Chat() {
-    const { userLoginData, socket, setUserLoginData } = useContext(userContext)
+    const { userLoginData, socket, setUserLoginData, setOnlineUser, onlineUser } = useContext(userContext)
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [selectedUser, setSelectedUser] = useState(null)
     useEffect(() => {
-        if (socket.current) {
+        if (socket.current && userLoginData) {
             socket.current.emit("add-user", userLoginData?._id)
+            socket.current.on("active-users", (users) => {
+                console.log(users);
+                setOnlineUser(users)
+            })
         }
     }, [userLoginData])
+
     useEffect(() => {
         const localData = localStorage.getItem("user");
         const loginUser = JSON.parse(localData);
@@ -44,6 +49,15 @@ function Chat() {
 
                                 <button className="btn w-100 text-white" onClick={() => {
                                     localStorage.removeItem("user")
+                                    if (socket.current) {
+                                        // socket.current.emit("disconnect")
+                                        socket.current.emit("log-out", userLoginData._id)
+
+                                        socket.current.on("active-users", (users) => {
+                                            console.log(users);
+                                            setOnlineUser(users)
+                                        })
+                                    }
                                     router.push("/")
                                 }} style={{ backgroundColor: "#3c556d" }}>logout</button>
                             </div>

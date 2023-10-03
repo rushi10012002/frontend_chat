@@ -10,7 +10,7 @@ import { toast } from "react-toastify"
 import { loginUser, resisterUser } from '@/services/api/user';
 import { userContext } from './wrapper';
 export default function Login() {
-    const { socket, setOnlineUser, setUserLoginData } = useContext(userContext)
+    const { socket, setOnlineUser, setUserLoginData, userLoginData } = useContext(userContext)
     const [userObj, setUserObj] = useState({
         email: "",
         password: ""
@@ -24,14 +24,13 @@ export default function Login() {
     const router = useRouter()
     const [loading, setLoading] = useState(false);
     const [mode, setMode] = useState(false)
-    useEffect(() => {
-        // lottie.loadAnimation({
-        //     container: document.getElementById("your-animation-container"),// Replace with your container ID
-        //     animationData: animationData, // Path to your Lottie JSON fileentById('your-animation-container'),
-        //     renderer: 'svg', // or 'canvas' or 'html'
-        //     autoplay: true,
-        // });
-    }, []);
+    // useEffect(() => {
+    //     if (socket.current) {
+    //         socket.current.on("online-user", (data) => {
+    //             console.log(data);
+    //         })
+    //     }
+    // }, [userLoginData]);
     const closeModal = () => {
         setMode(false)
     }
@@ -60,10 +59,7 @@ export default function Login() {
             } else {
                 setUserLoginData(res.data.data)
 
-                // socket.current.on("online-user", (users) => {
-                //     console.log(users);
-                //     setOnlineUser(users)
-                // })
+
                 localStorage.setItem("user", JSON.stringify(res.data.data))
                 toast.success(res.data.message, {
                     position: "top-center",

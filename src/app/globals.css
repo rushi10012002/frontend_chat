@@ -282,9 +282,12 @@ input:focus {
 
 .user-image {
   width: 60px;
-  height: 60px;
+  height: 50px;
   object-fit: contain;
   border-radius: 50%;
+  border: 3px solid #fed07f;
+  border: inset(2px);
+  background-color: #f2dffd;
 }
 
 .user-image-header {
@@ -360,6 +363,14 @@ input:focus {
   width: 100%;
   height: 200px;
   object-fit: cover;
+}
+
+.online {
+  color: rgb(156, 228, 47) !important;
+}
+
+.offline {
+  color: #bda6cb !important;
 }
 
 @media screen and (max-width:768px) {

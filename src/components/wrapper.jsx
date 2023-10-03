@@ -6,11 +6,12 @@ export const userContext = createContext()
 function Wrapper({ children }) {
 
     const [userLoginData, setUserLoginData] = useState({})
-    const [onlineUser, setOnlineUser] = useState({})
+    const [onlineUser, setOnlineUser] = useState([])
     const socket = useRef(null)
     useEffect(() => {
         socket.current = io("https://chat-next.onrender.com");
-        // https://chat-next.onrender.com
+        // socket.current = io("ws://localhost:8000");
+
     }, [])
     return (
         <userContext.Provider value={{ socket, onlineUser, setOnlineUser, setUserLoginData, userLoginData }}>

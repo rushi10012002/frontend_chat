@@ -7,7 +7,7 @@ import { toast } from 'react-toastify'
 import { userContext } from './wrapper'
 
 function UserList({ setSelectedUser, selectedUser }) {
-    const { userLoginData } = useContext(userContext)
+    const { userLoginData, onlineUser } = useContext(userContext)
 
     const [userList, setUserList] = useState([])
     useEffect(() => {
@@ -66,6 +66,11 @@ function UserList({ setSelectedUser, selectedUser }) {
                             <div className='w-100' style={{ marginLeft: ".7rem" }}> <h6 className='text-dark'>{item.userName}</h6>
                             </div>
                         </div>
+                        <small className='text-dark'>
+                            {onlineUser?.filter(items => items.userId == item._id).length == 1 ? <div className='online'>online</div> : <div className='offline'>
+                                offline
+                            </div>}
+                        </small>
 
                         {/* <div className='text-time'>
                             02.30 pm
