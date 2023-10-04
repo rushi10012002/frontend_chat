@@ -4,11 +4,13 @@ import { BASE_URL } from '@/services/endPoint'
 import moment from 'moment/moment'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { userContext } from './wrapper'
+import TypingStart from './typingStart'
 
 function ChatMessage({ selectedUser, setLoading }) {
     const [loginUser, setLoginUser] = useState({})
-    const { socket, setUserLoginData } = useContext(userContext)
-
+    const { socket, setUserLoginData, userLoginData } = useContext(userContext)
+    const [inputTrack, setInputTrack] = useState(false)
+    const [typingStatus, setTypingStatus] = useState({})
     const [messageList, setMessageList] = useState([])
     const [inputMsg, setInputMsg] = useState("");
     const messageContainerRef = useRef(null);
@@ -124,16 +126,35 @@ function ChatMessage({ selectedUser, setLoading }) {
         }
         scrollToBottom();
     }, [messageList])
+    useEffect(() => {
+        if (socket.current) {
+            socket.current.on("typing-status", (data) => {
+                console.log(data);
+                if (selectedUser._id == data.id) {
+                    setTypingStatus(data)
+                } else {
+                    setTypingStatus(data)
+                }
+            })
+        }
+    }, [inputTrack, selectedUser])
 
     return (
         <div className='container-fluid-message-list'>
             <div className="chat-header py-3">
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start", color: "white" }}>
                     <img className='user-image-header' src={BASE_URL + "/" + selectedUser.imageUrl} alt="" />
-                    <h6 style={{ textTransform: "capitalize", fontWeight: "800", marginLeft: ".8rem", fontSize: "24px" }}>{selectedUser.userName} (<small className='text-light'>{selectedUser.email}</small>)</h6>
-                    {/* {selectedUser.conversationId} */}
+                    <h6 style={{ textTransform: "capitalize", fontWeight: "800", marginLeft: ".8rem", fontSize: "24px" }}>{selectedUser.userName} (<small className='text-light'>{selectedUser.email}</small>)
+
+                    </h6>
+                    <small style={{ fontSize: "12px" }}> {typingStatus?.id == selectedUser._id ? <div style={{ display: "flex", alignItems: "center", color: "#fed07f", justifyContent: "flex-start" }}>typing <TypingStart /></div> : null}</small>
                 </div>
+
+
             </div>
+
+            {/* <div className="text-light"> {typingStatus?.id}</div>
+            <div className="text-danger">{selectedUser._id}</div> */}
             <div className="message">
                 <div className="message-list">
                     <div id="message-lista">
@@ -193,7 +214,18 @@ function ChatMessage({ selectedUser, setLoading }) {
                             <input type="file" onChange={(e) => {
                                 handleMessageInputFile(e)
                             }} />
-                            <input value={inputMsg} onChange={(e) => setInputMsg(e.target.value)} onKeyUp={handleMessageInput} type="text" placeholder='enter the message' className='form-control ' />
+                            <input onFocus={() => {
+                                if (socket.current) {
+                                    setInputTrack(true)
+                                    socket.current.emit("typing-start", { selectedChat: selectedUser._id, loginId: userLoginData._id })
+                                }
+                            }} onBlur={() => {
+                                if (socket.current) {
+                                    setInputTrack(false)
+                                    socket.current.emit("typing-end", { selectedChat: selectedUser._id, loginId: userLoginData._id })
+
+                                }
+                            }} value={inputMsg} onChange={(e) => setInputMsg(e.target.value)} onKeyUp={handleMessageInput} type="text" placeholder='enter the message' className='form-control ' />
                             <div className="btn btn-light " style={{ marginLeft: ".3rem" }}> ▶️ </div>
                         </div>
                     </div>

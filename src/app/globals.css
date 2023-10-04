@@ -54,6 +54,12 @@ body {
 
 }
 
+.animationTyping {
+  width: 50px;
+  height: 30px;
+
+}
+
 .login-box {
   flex-basis: 50%;
   width: 100%;
